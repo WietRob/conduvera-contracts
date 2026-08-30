@@ -1,0 +1,18 @@
+schema: conduvera-contract-schema-index.v1
+repository: WietRob/conduvera-contracts
+status: bootstrap-empty
+authority:
+  - protocol-schemas
+  - sdk-contract-bindings
+  - protocol-test-kit
+  - selected-stateless-reference-components
+non_authority:
+  - runtime-state
+  - scheduler
+  - workflow-transitions
+  - mutations
+  - credentials
+  - product-policy
+  - merge-decisions
+releases: []
+schemas: []
