@@ -1,0 +1,9 @@
+{
+  "payload_id": "pl_broken_03",
+  "schema_version": "work-contract.v2",
+  "task_type": "code_change",
+  "instructions": "Digest uses md5 which is not allowed by the contract.",
+  "repo": "WietRob/conduvera-core",
+  "base_commit": "",
+  "content_sha256": "md5:0123456789abcdef"
+}

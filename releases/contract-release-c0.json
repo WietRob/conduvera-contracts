@@ -1,0 +1,34 @@
+{
+  "schema": "conduvera-contract-release.v1",
+  "release": "C0",
+  "title": "WorkContract and WriterFence base protocol schemas",
+  "program_id": "CONDUVERA_CONTROL_PLANE_CONVERGENCE_AND_CURAOPS_CUTOVER_2026-08-30",
+  "released_at": "2026-09-02",
+  "artifact_digests": {
+    "schemas/work-contract.schema.json": "407f522d8104e197f40d778abeca13b4a64503b9bdc8770f64ddb4dacdaf5d34",
+    "schemas/writer-fence.schema.json": "c9623dea62d50238cdaf5384093ee10d81608bce8d23c4af5d6f697202199236",
+    "protocol-test-kit/tests/validate_fixtures.py": "a4e2e9fc7f24580e392317a4aa4d81508495754567e872a5e500b0e3edde244f",
+    "protocol-test-kit/fixtures/work-contract/invalid_bad_digest_format.json": "179b85a9fafa88bd1efc033c94d06c2568b85851394ef64893cfcd3c50a893d2",
+    "protocol-test-kit/fixtures/work-contract/invalid_missing_required.json": "420255e4f4f509bd20ad96ac586f79936e60e73f781a00ff8aa18ff40b753c98",
+    "protocol-test-kit/fixtures/work-contract/invalid_v1_version_rejected.json": "c33a2269974a0bc1b85d025a3cee82974a378c42c7545e409ab84a241f6a9c15",
+    "protocol-test-kit/fixtures/work-contract/valid_migrated_from_v1.json": "ad4f7353969504b2701e282eca053b00579f1764c4e3b9f4f291c498430016fa",
+    "protocol-test-kit/fixtures/work-contract/valid_minimal.json": "7bbe76147057346ed066153b93590b0a277ea0c3687440ffcbb6fbc355648e16",
+    "protocol-test-kit/fixtures/writer-fence/invalid_missing_claim_owner.json": "da43c54f54e0e8b6816e0e1679d0c4dc22a168e2fc0f3100c0961945c89b0ef6",
+    "protocol-test-kit/fixtures/writer-fence/invalid_negative_revision.json": "2b0e6349be059a1470d1cb49f1f54e2a68ccd61c8b3a68d75e2ec55e703cb9c9",
+    "protocol-test-kit/fixtures/writer-fence/valid_fence.json": "0f46db7c1b7036d4580dfde75791a549a7669bf378f02200a901bcebc2e445c2",
+    "protocol-test-kit/fixtures/writer-fence/valid_fence_minimal.json": "ed1556e374c0fba2c5d8b660846072266a06baafce54f6480b7080406990269d"
+  },
+  "canonical_full_contract_digest": "sha256:d5d1a3c221e40412b3f960936c3c4aa9b3439c2ed26394d1a099d1b8da5d5092",
+  "one_way_migration": {
+    "from": "task-payload.v1",
+    "to": "work-contract.v2",
+    "rule": "producers migrate one-way; v1 envelopes are never valid WorkContracts and no new v1 writes are permitted after consumer adoption (C0_CORE_WORK_CONTRACT)"
+  },
+  "conformance": {
+    "runner": "protocol-test-kit/tests/validate_fixtures.py",
+    "python": ">=3.11, stdlib only, no network",
+    "cases": 9
+  },
+  "no_runtime_code": true,
+  "authority_boundary": "data shapes and conformance only; see README.md"
+}

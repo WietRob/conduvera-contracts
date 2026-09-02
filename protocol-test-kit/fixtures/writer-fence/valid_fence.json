@@ -1,0 +1,8 @@
+{
+  "attempt_id": "att_0001",
+  "job_id": "job_0001",
+  "claim_owner": "writer-tuxedo-01",
+  "claim_lease_until": "2026-09-02T12:00:00+00:00",
+  "idem_key": "idem:job_0001:1",
+  "revision": 3
+}

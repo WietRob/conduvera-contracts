@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/WietRob/conduvera-contracts/main/schemas/work-contract.schema.json",
+  "title": "Conduvera WorkContract",
+  "description": "Canonical work contract for Conduvera operational task payloads. Extracted one-way from the durable task-payload envelope (task-payload.v1, WietRob/conduvera-core). Data shapes only: no runtime state, no execution authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["payload_id", "schema_version", "task_type", "instructions", "repo", "base_commit"],
+  "properties": {
+    "payload_id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{1,128}$", "description": "Stable payload identifier of the durable task payload."},
+    "schema_version": {"const": "work-contract.v2", "description": "Canonical contract version. task-payload.v1 writers must migrate one-way before emitting a WorkContract."},
+    "task_type": {"type": "string", "minLength": 1, "maxLength": 128},
+    "instructions": {"type": "string", "minLength": 1, "description": "Exact original task instructions; must never contain secret values."},
+    "repo": {"type": "string", "minLength": 1, "description": "Target repository identity as registered in the canonical repository registry."},
+    "base_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$|^$", "description": "Expected base commit (full SHA-1) of the target repository; empty string when unbound."},
+    "expected_artifacts": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "test_plan": {"type": "string"},
+    "secret_refs": {"type": "object", "additionalProperties": {"type": "string"}, "description": "References to secrets only; secret values are forbidden by contract."},
+    "created_at": {"type": "string", "format": "date-time"},
+    "retention_until": {"type": "string", "format": "date-time"},
+    "content_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$", "description": "Canonical content digest of the envelope (sort_keys, compact separators)."},
+    "migration_receipt": {"type": "object", "description": "Present only when this contract was produced by the one-way task-payload.v1 migration."},
+    "repository_binding": {"type": "object", "additionalProperties": {"type": "string"}, "description": "Optional registration binding stamped by the preclaim repository guard (e.g. registry name, source snapshot digest)."}
+  }
+}

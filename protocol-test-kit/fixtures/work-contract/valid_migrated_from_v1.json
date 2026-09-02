@@ -1,0 +1,15 @@
+{
+  "payload_id": "pl_migrated_01",
+  "schema_version": "work-contract.v2",
+  "task_type": "code_change",
+  "instructions": "Migrated one-way from task-payload.v1; content digest recomputed.",
+  "repo": "WietRob/conduvera-core",
+  "base_commit": "3eb80fa08c4e3771274d0564ed401acb628eec80",
+  "expected_artifacts": ["tests/test_example.py"],
+  "test_plan": "pytest -q tests/test_example.py",
+  "secret_refs": {"GITHUB_TOKEN": "keyring://wietrob/github"},
+  "created_at": "2026-09-02T06:00:00+00:00",
+  "retention_until": "2026-10-02T06:00:00+00:00",
+  "content_sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "migration_receipt": {"from_version": "task-payload.v1", "migrated_at": "2026-09-02T06:00:00+00:00"}
+}

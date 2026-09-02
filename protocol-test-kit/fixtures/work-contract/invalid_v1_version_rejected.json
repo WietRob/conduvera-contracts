@@ -1,0 +1,8 @@
+{
+  "payload_id": "pl_broken_02",
+  "schema_version": "task-payload.v1",
+  "task_type": "code_change",
+  "instructions": "Legacy v1 envelope is not a valid WorkContract; migrate one-way first.",
+  "repo": "WietRob/conduvera-core",
+  "base_commit": ""
+}
