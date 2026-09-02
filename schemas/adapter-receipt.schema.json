@@ -82,7 +82,8 @@
           "receipt_kind": {
             "const": "ATTEMPT_OUTCOME"
           }
-        }
+        },
+        "required": ["receipt_kind"]
       },
       "then": {
         "required": ["attempt_id", "attempt_outcome"]
@@ -94,7 +95,8 @@
           "receipt_kind": {
             "const": "CAPABILITY_SNAPSHOT"
           }
-        }
+        },
+        "required": ["receipt_kind"]
       },
       "then": {
         "required": ["capability_digest"]

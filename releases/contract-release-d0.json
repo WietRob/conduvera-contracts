@@ -12,13 +12,14 @@
   },
   "artifact_digests": {
     "schemas/adapter.schema.json": "f8a06d34c3d74eb6cb620f4fc05e6b0fdee298ae5ecb96da4e6760953ab423ac",
-    "schemas/adapter-receipt.schema.json": "dff96caabb797848562e97c7fab2196b1ee924bb1c4b640869c3538c68a167e0",
-    "protocol-test-kit/tests/validate_fixtures.py": "e0d0761fb53bfb507bf982e0be15c2b3a25a63a9871f52de6c706ef2a6500679"
+    "schemas/adapter-receipt.schema.json": "40347b15ab061d4193ceb126593098805139430441586d3308f4854a474e9cff",
+    "protocol-test-kit/tests/validate_fixtures.py": "f29f536362df126df68c9daf7d1b9640b199e6f2198acc9e415f1ef2c9eb4819"
   },
   "protocol_tests": {
     "validator": "protocol-test-kit/tests/validate_fixtures.py",
-    "fixtures": "protocol-test-kit/fixtures/adapter-v1/",
-    "rule": "unknown receipt kinds and global completion fields fail closed"
+    "fixtures": "protocol-test-kit/fixtures/adapter/ and protocol-test-kit/fixtures/adapter-receipt/",
+    "rule": "unknown receipt kinds and global completion fields fail closed",
+    "validator_note": "validate_fixtures.py implements the published keyword subset INCLUDING minimal draft-2020-12 allOf/if/then (added by the pass-1 P2 fix) so conditional receipt rules are actually enforced"
   },
   "producer": "hermes-takeover-coordinator-tuxedo"
 }

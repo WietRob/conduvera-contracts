@@ -32,18 +32,7 @@ def _check(instance, schema, path, errors):
         if not isinstance(instance, dict):
             errors.append(f"{path}: expected object")
             return
-        for req in schema.get("required", []):
-            if req not in instance:
-                errors.append(f"{path}: missing required property '{req}'")
-        props = schema.get("properties", {})
-        if schema.get("additionalProperties") is False:
-            for key in instance:
-                if key not in props:
-                    errors.append(f"{path}: additional property '{key}' not allowed")
-        for key, sub in props.items():
-            if key in instance:
-                _check(instance[key], sub, f"{path}.{key}", errors)
-    elif t == "array":
+    if t == "array":
         if not isinstance(instance, list):
             errors.append(f"{path}: expected array")
             return
@@ -77,6 +66,40 @@ def _check(instance, schema, path, errors):
         errors.append(f"{path}: const mismatch (expected {schema['const']!r})")
     if "enum" in schema and instance not in schema["enum"]:
         errors.append(f"{path}: value not in enum")
+    # object constraints apply whenever the schema declares them (also
+    # without an explicit "type": "object", e.g. inside if/then subschemas)
+    if isinstance(instance, dict):
+        for req in schema.get("required", []):
+            if req not in instance:
+                errors.append(f"{path}: missing required property '{req}'")
+        props = schema.get("properties", {})
+        if schema.get("additionalProperties") is False:
+            for key in instance:
+                if key not in props:
+                    errors.append(f"{path}: additional property '{key}' not allowed")
+        for key, sub in props.items():
+            if key in instance:
+                _check(instance[key], sub, f"{path}.{key}", errors)
+    _check_conditionals(instance, schema, path, errors)
+
+
+def _check_conditionals(instance, schema, path, errors):
+    """Minimal draft-2020-12 allOf/if/then support.
+
+    The adapter-receipt schema uses if/then to make receipt-kind-specific
+    fields mandatory (ATTEMPT_OUTCOME -> attempt_id + attempt_outcome,
+    CAPABILITY_SNAPSHOT -> capability_digest). Without this support the
+    conformance kit would silently skip those rules.
+    """
+    for sub in schema.get("allOf", []):
+        _check(instance, sub, path, errors)
+    cond = schema.get("if")
+    if cond is None:
+        return
+    probe: list[str] = []
+    _check(instance, cond, f"{path}.if", probe)
+    if not probe and "then" in schema:
+        _check(instance, schema["then"], f"{path}.then", errors)
 
 
 def validate(instance, schema):
