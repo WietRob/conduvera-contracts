@@ -1,6 +1,6 @@
 schema: conduvera-contract-schema-index.v1
 repository: WietRob/conduvera-contracts
-status: bootstrap-empty
+status: active-releases
 authority:
   - protocol-schemas
   - sdk-contract-bindings
@@ -14,5 +14,19 @@ non_authority:
   - credentials
   - product-policy
   - merge-decisions
-releases: []
-schemas: []
+releases:
+  - id: C0
+    file: releases/contract-release-c0.json
+    released_at: "2026-09-02"
+    schemas:
+      - schemas/work-contract.schema.json (work-contract.v2)
+      - schemas/writer-fence.schema.json (writer-fence.v1)
+schemas:
+  - id: work-contract.v2
+    file: schemas/work-contract.schema.json
+    release: C0
+    description: canonical operational task payload contract (one-way from task-payload.v1)
+  - id: writer-fence.v1
+    file: schemas/writer-fence.schema.json
+    release: C0
+    description: canonical attempt fencing and idempotency identity

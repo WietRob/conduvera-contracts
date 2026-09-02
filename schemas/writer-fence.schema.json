@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/WietRob/conduvera-contracts/main/schemas/writer-fence.schema.json",
+  "title": "Conduvera WriterFence",
+  "description": "Canonical writer fencing and idempotency identity for Conduvera attempts. Data shape only: no runtime state, no execution authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["attempt_id", "job_id", "claim_owner", "idem_key", "revision"],
+  "properties": {
+    "attempt_id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{1,128}$"},
+    "job_id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{1,128}$"},
+    "claim_owner": {"type": "string", "minLength": 1, "description": "Identity of the writer holding the claim/lease for this attempt."},
+    "claim_lease_until": {"type": "string", "format": "date-time", "description": "Lease expiry; absent or empty means no live lease."},
+    "idem_key": {"type": "string", "description": "Idempotency key binding duplicate dispatches to one attempt."},
+    "revision": {"type": "integer", "minimum": 0, "description": "CAS revision counter for fenced writes."}
+  }
+}
