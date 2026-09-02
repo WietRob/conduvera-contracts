@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/WietRob/conduvera-contracts/main/schemas/adapter.schema.json",
+  "title": "Conduvera Adapter Lifecycle Contract (release D0)",
+  "description": "Unified lifecycle contract for control-plane adapters. Roles are METADATA declared by the adapter (reasoner/reviewer/executor); no adapter ever carries a global completion field - completion is derived per attempt from evidence by the control plane, never asserted by the adapter. A capability snapshot is typed and mandatory at registration; cancel and recover are typed lifecycle transitions.",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "adapter.v1"
+    },
+    "adapter_id": {
+      "type": "string",
+      "pattern": "^adp_[A-Za-z0-9][A-Za-z0-9._-]{2,180}$"
+    },
+    "roles": {
+      "description": "Role metadata: which lifecycle roles this adapter can serve. Declarative only; the control plane never infers roles from behavior.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": ["reasoner", "reviewer", "executor"]
+      }
+    },
+    "harness": {
+      "type": "string",
+      "minLength": 1
+    },
+    "capability_snapshot": {
+      "description": "Typed snapshot of what the adapter can do at registration time (NOT a completion claim).",
+      "type": "object",
+      "properties": {
+        "snapshot_id": {
+          "type": "string",
+          "pattern": "^cap_[A-Za-z0-9]{8,64}$"
+        },
+        "captured_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "supports_streaming": {
+          "type": "boolean"
+        },
+        "supports_async": {
+          "type": "boolean"
+        },
+        "max_concurrency": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "declared_roles": {
+          "$ref": "#/$defs/roles_array"
+        },
+        "digest": {
+          "description": "sha256 over the canonical snapshot content.",
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      },
+      "required": ["snapshot_id", "captured_at", "declared_roles", "digest"],
+      "additionalProperties": false
+    },
+    "lifecycle_state": {
+      "description": "Typed lifecycle states; cancel and recover are first-class transitions.",
+      "enum": ["REGISTERED", "ACTIVE", "SUSPENDED", "CANCELLING", "CANCELLED", "RECOVERING", "RETIRED"]
+    },
+    "cancel": {
+      "type": "object",
+      "properties": {
+        "supported": {
+          "type": "boolean"
+        },
+        "grace_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "terminal_after_cancel": {
+          "type": "boolean"
+        }
+      },
+      "required": ["supported"],
+      "additionalProperties": false
+    },
+    "recover": {
+      "type": "object",
+      "properties": {
+        "supported": {
+          "type": "boolean"
+        },
+        "max_recovery_attempts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "recovery_window_seconds": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": ["supported"],
+      "additionalProperties": false
+    },
+    "registered_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "schema_version",
+    "adapter_id",
+    "roles",
+    "harness",
+    "capability_snapshot",
+    "lifecycle_state",
+    "registered_at"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "roles_array": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": ["reasoner", "reviewer", "executor"]
+      }
+    }
+  }
+}

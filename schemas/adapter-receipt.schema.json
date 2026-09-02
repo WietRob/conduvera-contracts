@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/WietRob/conduvera-contracts/main/schemas/adapter-receipt.schema.json",
+  "title": "Conduvera Adapter Receipt Contract (release D0)",
+  "description": "Typed receipts for adapter lifecycle events: capability_snapshot, cancel, recover, and terminal attempt outcome observations. Receipts are append-only facts ABOUT an adapter; they never carry a global completion field - terminal status is per-attempt and always evidence-backed by the control plane.",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "adapter-receipt.v1"
+    },
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^adprcp_[A-Za-z0-9]{8,64}$"
+    },
+    "adapter_id": {
+      "type": "string",
+      "pattern": "^adp_[A-Za-z0-9][A-Za-z0-9._-]{2,180}$"
+    },
+    "receipt_kind": {
+      "description": "Typed receipt kinds; unknown kinds fail closed at validation.",
+      "enum": ["CAPABILITY_SNAPSHOT", "CANCELLED", "RECOVERED", "RECOVERY_FAILED", "ATTEMPT_OUTCOME"]
+    },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "capability_snapshot": {
+      "$ref": "adapter.schema.json#/$defs/roles_array",
+      "description": "For CAPABILITY_SNAPSHOT receipts: the full typed snapshot object is embedded via capability_digest binding; roles array kept for quick filtering."
+    },
+    "capability_digest": {
+      "description": "sha256 over the canonical snapshot content this receipt certifies.",
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "attempt_id": {
+      "type": ["string", "null"],
+      "pattern": "^att_[A-Za-z0-9][A-Za-z0-9._-]{2,180}$"
+    },
+    "attempt_outcome": {
+      "description": "Only for ATTEMPT_OUTCOME receipts: per-attempt observation, NEVER a global completion.",
+      "type": ["object", "null"],
+      "properties": {
+        "state": {
+          "enum": ["RUNNING", "SUCCEEDED", "FAILED", "CANCELLED", "UNKNOWN"]
+        },
+        "exit_code": {
+          "type": ["integer", "null"]
+        },
+        "evidence_bundle_id": {
+          "type": ["string", "null"]
+        },
+        "terminal_reason": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "detail": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "content_sha256": {
+      "description": "sha256 over the canonical receipt content (all fields except content_sha256 itself).",
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  },
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "adapter_id",
+    "receipt_kind",
+    "recorded_at",
+    "content_sha256"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "receipt_kind": {
+            "const": "ATTEMPT_OUTCOME"
+          }
+        }
+      },
+      "then": {
+        "required": ["attempt_id", "attempt_outcome"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "receipt_kind": {
+            "const": "CAPABILITY_SNAPSHOT"
+          }
+        }
+      },
+      "then": {
+        "required": ["capability_digest"]
+      }
+    }
+  ]
+}

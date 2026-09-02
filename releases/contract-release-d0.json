@@ -1,0 +1,24 @@
+{
+  "schema": "conduvera-contract-release.v1",
+  "release": "D0",
+  "title": "Unified adapter lifecycle and receipt schemas",
+  "program_id": "CONDUVERA_CONTROL_PLANE_CONVERGENCE_AND_CURAOPS_CUTOVER_2026-08-30",
+  "released_at": "2026-09-02",
+  "depends_on": "C0",
+  "acceptance": {
+    "reasoner_reviewer_executor_roles_metadata": "roles is declarative metadata (enum array) on adapter.v1; the control plane never infers roles from behavior",
+    "no_global_completion_field": "no property of adapter.v1 or adapter-receipt.v1 carries a global completion; attempt outcome is per-attempt and evidence-backed (attempt_outcome.state enum, evidence_bundle_id binding)",
+    "capability_snapshot_and_cancel_recover_typed": "capability_snapshot is a typed object with digest binding; cancel and recover are typed lifecycle objects plus lifecycle_state enum including CANCELLING/CANCELLED/RECOVERING"
+  },
+  "artifact_digests": {
+    "schemas/adapter.schema.json": "f8a06d34c3d74eb6cb620f4fc05e6b0fdee298ae5ecb96da4e6760953ab423ac",
+    "schemas/adapter-receipt.schema.json": "dff96caabb797848562e97c7fab2196b1ee924bb1c4b640869c3538c68a167e0",
+    "protocol-test-kit/tests/validate_fixtures.py": "e0d0761fb53bfb507bf982e0be15c2b3a25a63a9871f52de6c706ef2a6500679"
+  },
+  "protocol_tests": {
+    "validator": "protocol-test-kit/tests/validate_fixtures.py",
+    "fixtures": "protocol-test-kit/fixtures/adapter-v1/",
+    "rule": "unknown receipt kinds and global completion fields fail closed"
+  },
+  "producer": "hermes-takeover-coordinator-tuxedo"
+}

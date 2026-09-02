@@ -95,6 +95,13 @@ CASES = [
     ("writer-fence", "valid_fence_minimal.json", True),
     ("writer-fence", "invalid_missing_claim_owner.json", False),
     ("writer-fence", "invalid_negative_revision.json", False),
+    ("adapter", "valid_adapter.json", True),
+    ("adapter", "invalid_global_completion_field.json", False),
+    ("adapter", "invalid_unknown_role.json", False),
+    ("adapter-receipt", "valid_receipt_snapshot.json", True),
+    ("adapter-receipt", "valid_receipt_attempt_outcome.json", True),
+    ("adapter-receipt", "invalid_receipt_missing_attempt_id.json", False),
+    ("adapter-receipt", "invalid_receipt_unknown_kind.json", False),
 ]
 
 

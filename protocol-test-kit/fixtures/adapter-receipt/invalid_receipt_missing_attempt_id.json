@@ -1,0 +1,14 @@
+{
+  "schema_version": "adapter-receipt.v1",
+  "receipt_id": "adprcp_broken1",
+  "adapter_id": "adp_hermes_main",
+  "receipt_kind": "ATTEMPT_OUTCOME",
+  "recorded_at": "2026-09-02T01:00:00Z",
+  "attempt_outcome": {
+    "state": "SUCCEEDED",
+    "exit_code": 0,
+    "evidence_bundle_id": "ev_bundle123",
+    "terminal_reason": "complete"
+  },
+  "content_sha256": "sha256:5a0ff984067ef3644a6e05057b178a13e1cc3565d41b312791069f7622c6ec7e"
+}
