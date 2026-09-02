@@ -1,0 +1,21 @@
+{
+  "schema_version": "adapter.v1",
+  "adapter_id": "adp_hermes_main",
+  "roles": [
+    "reasoner",
+    "reviewer",
+    "executor"
+  ],
+  "harness": "hermes",
+  "capability_snapshot": {
+    "snapshot_id": "cap_20260902a",
+    "captured_at": "2026-09-02T00:00:00Z",
+    "declared_roles": [
+      "reasoner",
+      "executor"
+    ],
+    "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "lifecycle_state": "ACTIVE",
+  "registered_at": "2026-09-02T00:00:00Z"
+}

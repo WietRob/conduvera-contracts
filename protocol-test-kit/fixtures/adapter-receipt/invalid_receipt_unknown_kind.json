@@ -1,0 +1,9 @@
+{
+  "schema_version": "adapter-receipt.v1",
+  "receipt_id": "adprcp_20260902",
+  "adapter_id": "adp_hermes_main",
+  "receipt_kind": "GLOBAL_COMPLETION",
+  "recorded_at": "2026-09-02T00:00:00Z",
+  "capability_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "content_sha256": "sha256:2c9a36cfc0d4e8281b73296c521ca38c28c473cce96f7d5c8b0cb4956bd07611"
+}

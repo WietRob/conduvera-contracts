@@ -1,0 +1,8 @@
+{
+  "schema_version": "adapter-receipt.v1",
+  "receipt_id": "adprcp_broken12",
+  "adapter_id": "adp_hermes_main",
+  "receipt_kind": "ATTEMPT_OUTCOME",
+  "recorded_at": "2026-09-02T01:00:00Z",
+  "content_sha256": "sha256:55bb604bdae1267a84f378da8e85218477e6a5b45bae1e8263966511a697eb4e"
+}
