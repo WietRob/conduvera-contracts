@@ -21,6 +21,24 @@ releases:
     schemas:
       - schemas/work-contract.schema.json (work-contract.v2)
       - schemas/writer-fence.schema.json (writer-fence.v1)
+  - id: D0
+    file: releases/contract-release-d0.json
+    released_at: "2026-09-02"
+    depends_on: C0
+    schemas:
+      - schemas/adapter.schema.json (adapter.v1)
+      - schemas/adapter-receipt.schema.json (adapter-receipt.v1)
+  - id: D8_GATE_PROTOCOL
+    file: releases/contract-release-D8_GATE_PROTOCOL.json
+    released_at: "2026-09-02"
+    depends_on: D0
+    schemas:
+      - schemas/gate-descriptor.schema.json (gate-descriptor.v1)
+      - schemas/gate-execution-key.schema.json (gate-execution-key.v1)
+      - schemas/gate-plan.schema.json (gate-plan.v1)
+      - schemas/gate-execution-receipt.schema.json (gate-execution-receipt.v1)
+      - schemas/gate-evidence-reference.schema.json (gate-evidence-reference.v1)
+      - schemas/gate-skip-reason.schema.json (gate-skip-reason.v1)
 schemas:
   - id: work-contract.v2
     file: schemas/work-contract.schema.json
@@ -30,3 +48,35 @@ schemas:
     file: schemas/writer-fence.schema.json
     release: C0
     description: canonical attempt fencing and idempotency identity
+  - id: adapter.v1
+    file: schemas/adapter.schema.json
+    release: D0
+    description: unified adapter lifecycle contract; roles are declarative metadata, no global completion field
+  - id: adapter-receipt.v1
+    file: schemas/adapter-receipt.schema.json
+    release: D0
+    description: typed append-only adapter lifecycle receipts; attempt outcome is per-attempt and evidence-backed
+  - id: gate-descriptor.v1
+    file: schemas/gate-descriptor.schema.json
+    release: D8_GATE_PROTOCOL
+    description: public non-authoritative gate descriptor (identity, cost/relevance/assurance/cache planning, V2.1 gate family + authority bindings); identity triple gate_id+version+authority_domain is unique
+  - id: gate-execution-key.v1
+    file: schemas/gate-execution-key.schema.json
+    release: D8_GATE_PROTOCOL
+    description: deterministic execution key, SHA-256 over the frozen canonical component array including assurance_class (two classes never share a key)
+  - id: gate-plan.v1
+    file: schemas/gate-plan.schema.json
+    release: D8_GATE_PROTOCOL
+    description: deterministic gate plan with P0-P5 phase ordering, unique keys, intra-plan acyclic dependencies, content-bound plan_digest
+  - id: gate-execution-receipt.v1
+    file: schemas/gate-execution-receipt.schema.json
+    release: D8_GATE_PROTOCOL
+    description: per-execution receipt under one assurance_class; result is never a global GateOutcome; PASS needs evidence, SKIPPED needs a typed reason
+  - id: gate-evidence-reference.v1
+    file: schemas/gate-evidence-reference.schema.json
+    release: D8_GATE_PROTOCOL
+    description: content_sha256-bound evidence pointer with subject binding and canonical store location
+  - id: gate-skip-reason.v1
+    file: schemas/gate-skip-reason.schema.json
+    release: D8_GATE_PROTOCOL
+    description: typed skip codes with mandatory detail; skipping is never silent

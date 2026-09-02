@@ -1,0 +1,27 @@
+{
+  "schema_version": "gate-execution-receipt.v1",
+  "receipt_id": "grcpt_6789f012",
+  "execution_key": "c20e08b9910df79c63e7726e725df21ea90ccd2f6c98a63ef684761074d337a4",
+  "gate_id": "gate_secret_scan",
+  "gate_version": "1.0.0",
+  "assurance_class": "MANAGED_AUTHORITATIVE",
+  "started_at": "2026-09-02T18:00:00Z",
+  "finished_at": "2026-09-02T18:01:30Z",
+  "result": "MERGE_APPROVED",
+  "evidence_refs": [
+    {
+      "schema_version": "gate-evidence-reference.v1",
+      "evidence_id": "gev_abc12345",
+      "content_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "subject": {
+        "subject_type": "CANDIDATE_TREE",
+        "subject_ref": "1111111111111111111111111111111111111111"
+      },
+      "store_location": "conduvera-evidence://gate-runs/1111111111111111111111111111111111111111/abc12345",
+      "produced_at": "2026-09-02T18:00:00Z",
+      "producer": "conduvera-core-gate-executor"
+    }
+  ],
+  "producer": "conduvera-core-gate-executor",
+  "content_sha256": "sha256:2214c46a4610929d6ed0b9b50d464eecd3de71e8f011ffad162d5a862c4a371b"
+}

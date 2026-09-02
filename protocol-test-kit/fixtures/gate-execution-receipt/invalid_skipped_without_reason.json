@@ -1,0 +1,14 @@
+{
+  "schema_version": "gate-execution-receipt.v1",
+  "receipt_id": "grcpt_4567def0",
+  "execution_key": "c20e08b9910df79c63e7726e725df21ea90ccd2f6c98a63ef684761074d337a4",
+  "gate_id": "gate_secret_scan",
+  "gate_version": "1.0.0",
+  "assurance_class": "MANAGED_AUTHORITATIVE",
+  "started_at": "2026-09-02T18:00:00Z",
+  "finished_at": "2026-09-02T18:01:30Z",
+  "result": "SKIPPED",
+  "evidence_refs": [],
+  "producer": "conduvera-core-gate-executor",
+  "content_sha256": "sha256:6c7194037989d93634f701956893ba0f8b947a4a06d644218368f2290b0aed15"
+}

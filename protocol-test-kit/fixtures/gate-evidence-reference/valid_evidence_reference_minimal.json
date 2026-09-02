@@ -1,0 +1,11 @@
+{
+  "schema_version": "gate-evidence-reference.v1",
+  "evidence_id": "gev_def67890",
+  "content_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "subject": {
+    "subject_type": "CHANGED_PATHS",
+    "subject_ref": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "store_location": "evidence-store://2026-09-02/def67890",
+  "produced_at": "2026-09-02T18:05:00Z"
+}

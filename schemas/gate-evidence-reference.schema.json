@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/WietRob/conduvera-contracts/main/schemas/gate-evidence-reference.schema.json",
+  "title": "Conduvera GateEvidenceReference (release D8_GATE_PROTOCOL)",
+  "description": "Typed, content-bound pointer to one immutable evidence artifact produced by a gate execution. The reference carries the subject binding and the canonical store location; the digest proves identity only after the referenced payload is resolved from its canonical store and re-hashed. Evidence references never carry decisions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evidence_id",
+    "content_sha256",
+    "subject",
+    "store_location",
+    "produced_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "gate-evidence-reference.v1"
+    },
+    "evidence_id": {
+      "type": "string",
+      "pattern": "^gev_[A-Za-z0-9]{8,64}$"
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "sha256 over the canonical content of the referenced evidence payload."
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject_type",
+        "subject_ref"
+      ],
+      "properties": {
+        "subject_type": {
+          "enum": [
+            "CANDIDATE_TREE",
+            "BASE_TREE",
+            "CHANGED_PATHS",
+            "WORK_CONTRACT",
+            "POLICY",
+            "TOOLCHAIN",
+            "ENVIRONMENT",
+            "GATE_PLAN",
+            "GATE_RECEIPT",
+            "EVIDENCE_BUNDLE"
+          ]
+        },
+        "subject_ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Exact digest or identifier of the subject this evidence is about."
+        }
+      }
+    },
+    "store_location": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Canonical, resolvable store location (URI or canonical store path); never a caller-supplied ad-hoc path."
+    },
+    "produced_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "producer": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

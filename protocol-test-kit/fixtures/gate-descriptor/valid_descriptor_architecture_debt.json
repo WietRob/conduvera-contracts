@@ -1,0 +1,56 @@
+{
+  "schema_version": "gate-descriptor.v1",
+  "gate_id": "gate_architecture_debt_unified",
+  "version": "2.1.0",
+  "semantic_digest": "sha256:a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+  "category": "architecture-debt",
+  "gate_family": "ARCHITECTURE_DEBT",
+  "authority_domain": "repository-policy",
+  "cost_class": "MEDIUM",
+  "depends_on": [
+    "gate_import_boundaries"
+  ],
+  "applies_when": {
+    "change_classes": [
+      "CODE"
+    ],
+    "risk_levels": [
+      "MEDIUM",
+      "HIGH"
+    ]
+  },
+  "required_assurance_class": "MANAGED_AUTHORITATIVE",
+  "cache_policy": {
+    "mode": "REUSE_ON_KEY_MATCH",
+    "max_age_seconds": 86400
+  },
+  "timeout": 300,
+  "resource_class": "CPU_LIGHT",
+  "side_effects": "none",
+  "output_schema": "https://raw.githubusercontent.com/WietRob/conduvera-contracts/main/schemas/gate-evidence-reference.schema.json",
+  "canonical_source_refs": [
+    "scripts/captain/architecture-debt-ratchet.py@500980c"
+  ],
+  "architecture_contract_refs": [
+    "docs/adr/ADR-0031-architecture-debt-dual-policy.md"
+  ],
+  "supersedes": [
+    {
+      "gate_id": "gate_legacy_architecture_debt",
+      "semantic_digest": "sha256:b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1"
+    }
+  ],
+  "non_regression_basis": "DUAL_ABSOLUTE_AND_BASE",
+  "semantic_review_trigger": {
+    "triggers": [
+      "NONE"
+    ]
+  },
+  "input_subjects": [
+    "CANDIDATE_TREE",
+    "BASE_TREE",
+    "CHANGED_PATHS"
+  ],
+  "required_when_relevant": true,
+  "excludable": false
+}

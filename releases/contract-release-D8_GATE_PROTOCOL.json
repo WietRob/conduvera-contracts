@@ -1,0 +1,38 @@
+{
+  "schema": "conduvera-contract-release.v1",
+  "release": "D8_GATE_PROTOCOL",
+  "title": "Public, non-authoritative gate planning and evidence protocol",
+  "program_id": "CONDUVERA_CONTROL_PLANE_CONVERGENCE_AND_CURAOPS_CUTOVER_2026-08-30",
+  "released_at": "2026-09-02",
+  "depends_on": "D0",
+  "acceptance": {
+    "descriptor_binding": "GateDescriptor binds gate_id, version (semantic_version), semantic_digest, category, cost_class (INSTANT|LIGHT|MEDIUM|HEAVY|EXTERNAL), depends_on[], applies_when, required_assurance_class, cache_policy, timeout, resource_class, side_effects (typed enum, minimum 'none'), output_schema",
+    "v2_1_gate_family_addendum": "gate_family is a 13-value enum (AUTHORITY_INTEGRITY, CHANGE_GOVERNANCE, SSOT_CANONICALITY, DOCUMENT_AUTHORITY, ARCHITECTURE_BOUNDARY, ARCHITECTURE_DEBT, CONTRACT_COMPATIBILITY, SECURITY, QUALITY, TEST, BUILD_MIGRATION, EXTERNAL_ANALYSIS, REVIEW_PREREQUISITE); descriptor additionally binds authority_domain, canonical_source_refs[], architecture_contract_refs[], supersedes[], non_regression_basis, semantic_review_trigger, input_subjects[], required_when_relevant, excludable",
+    "execution_key_freeze": "execution_key = lowercase-hex SHA-256 over UTF-8 compact JSON array [candidate_tree_sha, work_contract_digest, policy_digest, gate_semantic_digest, toolchain_digest, environment_digest, assurance_class] - serialization frozen in the schema; assurance_class/toolchain/environment are key components, so differing classes are never silently merged and two assurance classes never share a key",
+    "plan_determinism": "GatePlan is deterministic: P0-P5 phase enum ordering, requests sorted ascending by (phase_rank, execution_key), unique keys, intra-plan acyclic depends_on, content-bound plan_digest",
+    "receipt_and_evidence": "GateExecutionReceipt carries assurance_class and a per-execution result (PASS|FAIL|ERROR|SKIPPED|UNAVAILABLE) - never a global GateOutcome; PASS requires >=1 GateEvidenceReference with content_sha256 binding; SKIPPED requires a typed GateSkipReason (never silent); receipt content_sha256 binds canonical content",
+    "no_global_gate_outcome": "no property of any protocol object carries a global GateOutcome; merge decisions remain in conduvera-core (additionalProperties:false everywhere + kit-level outcome scan)",
+    "identity_collision_rule": "the protocol rejects two independent gate definitions claiming the same gate_id + semantic_version + authority_domain with different semantic_digest (schema identity rule + test-kit enforcement)",
+    "skip_typing": "GateSkipReason is a typed enum (NOT_APPLICABLE_CHANGED_PATHS, ASSURANCE_CLASS_MISMATCH, CACHE_HIT, POLICY_DISABLED, DEPENDENCY_FAILED, P0_P1_BLOCK, NON_QUALIFYING_CHANGE, ENVIRONMENT_UNAVAILABLE, EXCLUDED_BY_POLICY) with mandatory detail"
+  },
+  "artifact_digests": {
+    "schemas/gate-descriptor.schema.json": "ebef0487923d74d1ac15bf283b6845de1938c900f39a78db165ab6418ef1d5ee",
+    "schemas/gate-execution-key.schema.json": "456634afc8b29182fdf60706fb91eaabbb0ddb474bfb051b6fc2668f689a036f",
+    "schemas/gate-plan.schema.json": "45a7eb52c3f14ded194994dd63af38a8b137f9abc80c34324475ca292d21cd34",
+    "schemas/gate-execution-receipt.schema.json": "77ec88f8545b5553f536dd834965088a8ed486453486370440f5a3d8fede42f4",
+    "schemas/gate-evidence-reference.schema.json": "88b5aaca209da6e118b38a0ba73afd5a47febf185d2876a10b612ec8f93b5883",
+    "schemas/gate-skip-reason.schema.json": "a213b348391c78a1d1d6fd83f3c95a60625d122d49d01dd3d050661f659b0c28",
+    "protocol-test-kit/tests/validate_fixtures.py": "7e2cbdaa09f91c9775fd0c1c556a34637f9285fee39962b6adbca941067ef481"
+  },
+  "protocol_tests": {
+    "validator": "protocol-test-kit/tests/validate_fixtures.py",
+    "fixtures": "protocol-test-kit/fixtures/gate-*/ plus the C0/D0 families (regression-protected)",
+    "rule": "all negatives fail closed for their declared reason; frozen derivation/determinism/binding/collision rules enforced by the kit",
+    "validator_note": "kit implements the published keyword subset INCLUDING minimal draft-2020-12 allOf/if/then/else (D0 lesson) and adds the frozen D8 rule layer: execution-key derivation, plan determinism (P0-P5 order, unique keys, acyclic deps, digest binding), receipt content binding, PASS-needs-evidence, SKIPPED-needs-reason, global-outcome scan, identity-collision detection",
+    "cases": 48,
+    "cases_positive": 18,
+    "cases_negative": 30
+  },
+  "cross_repo_handoff": "RELEASE-COMMIT-SHA + the six schema digests above are the only admissible cross-repo handoff for D8_GATE_PLAN_ENGINE, D9A, D9B",
+  "producer": "hermes-takeover-coordinator-tuxedo"
+}

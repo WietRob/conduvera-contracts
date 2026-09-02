@@ -1,0 +1,6 @@
+{
+  "schema_version": "gate-skip-reason.v1",
+  "gate_id": "gate_lint",
+  "code": "JUST_BECAUSE",
+  "detail": "untyped skip must fail closed"
+}
