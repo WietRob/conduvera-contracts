@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/WietRob/conduvera-contracts/main/schemas/gate-plan.schema.json",
+  "title": "Conduvera GatePlan (release D8_GATE_PROTOCOL)",
+  "description": "Deterministic gate execution plan for one candidate. DETERMINISM RULES (frozen): (1) every request carries a phase from the fixed P0-P5 order (P0 integrity/identity/fence/freshness, P1 governance/SSoT/scope/secrets/syntax/cheap boundaries, P2 affected lint/types/focused tests - independent items may run in parallel, P3 required full suites/integration/builds/migrations, P4 heavy/external analysis, P5 conditional semantic review); (2) requests MUST be sorted ascending by (phase_rank, execution_key); (3) execution keys are unique within the plan; (4) depends_on references only keys in the same plan and MUST be acyclic; (5) plan_digest is the lowercase-hex SHA-256 over the UTF-8 compact JSON (separators ',' ':' , sort_keys per object) of the `requests` array in stored order. A plan is pure planning data: it never carries outcomes, results, or merge decisions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plan_id",
+    "work_contract_digest",
+    "candidate_tree_sha",
+    "policy_digest",
+    "requests",
+    "plan_digest"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "gate-plan.v1"
+    },
+    "plan_id": {
+      "type": "string",
+      "pattern": "^gplan_[A-Za-z0-9]{8,64}$"
+    },
+    "work_contract_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "candidate_tree_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$|^[0-9a-f]{64}$"
+    },
+    "policy_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "requests": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "execution_key",
+          "descriptor_ref",
+          "phase",
+          "depends_on"
+        ],
+        "properties": {
+          "execution_key": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "descriptor_ref": {
+            "type": "string",
+            "pattern": "^gate_[A-Za-z0-9][A-Za-z0-9._-]{2,180}@[0-9]+\\.[0-9]+\\.[0-9]+$",
+            "description": "Descriptor reference '<gate_id>@<semantic_version>'."
+          },
+          "phase": {
+            "enum": [
+              "P0",
+              "P1",
+              "P2",
+              "P3",
+              "P4",
+              "P5"
+            ]
+          },
+          "depends_on": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "plan_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "Content binding of the requests array in stored order (see DETERMINISM RULES)."
+    }
+  }
+}

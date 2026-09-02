@@ -1,0 +1,24 @@
+{
+  "schema_version": "gate-plan.v1",
+  "plan_id": "gplan_a2b3c4d5",
+  "work_contract_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+  "candidate_tree_sha": "1111111111111111111111111111111111111111",
+  "policy_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+  "requests": [
+    {
+      "execution_key": "c20e08b9910df79c63e7726e725df21ea90ccd2f6c98a63ef684761074d337a4",
+      "descriptor_ref": "gate_secret_scan@1.0.0",
+      "phase": "P1",
+      "depends_on": []
+    },
+    {
+      "execution_key": "7f716ab6e349f2f6b75c607a9c613beeca143dda726c9132fc07be2f430facd0",
+      "descriptor_ref": "gate_lint@1.2.0",
+      "phase": "P2",
+      "depends_on": [
+        "c20e08b9910df79c63e7726e725df21ea90ccd2f6c98a63ef684761074d337a4"
+      ]
+    }
+  ],
+  "plan_digest": "sha256:47660d566d2b2af07c0f5fe506e2dd385a45d0b41249b34d97cb4e28a6b1685a"
+}

@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/WietRob/conduvera-contracts/main/schemas/gate-execution-receipt.schema.json",
+  "title": "Conduvera GateExecutionReceipt (release D8_GATE_PROTOCOL)",
+  "description": "Append-only receipt of ONE gate execution under ONE assurance class. `result` is the executor's per-execution observation (PASS|FAIL|ERROR|SKIPPED|UNAVAILABLE) and is NEVER a global GateOutcome: no object in this protocol carries a global gate outcome, and merge decisions remain in conduvera-core. Receipts carry assurance_class because two assurance classes never share an execution key and their results are never merged. PASS receipts MUST carry at least one evidence reference (content_sha256-bound); SKIPPED receipts MUST carry a typed GateSkipReason - skipping is never silent. content_sha256 binds the canonical receipt content: 'sha256:' + lowercase-hex SHA-256 over the UTF-8 compact JSON (separators ',' ':', sort_keys) of the receipt object with content_sha256 removed.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "execution_key",
+    "gate_id",
+    "gate_version",
+    "assurance_class",
+    "started_at",
+    "finished_at",
+    "result",
+    "producer",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "gate-execution-receipt.v1"
+    },
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^grcpt_[A-Za-z0-9]{8,64}$"
+    },
+    "execution_key": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "gate_id": {
+      "type": "string",
+      "pattern": "^gate_[A-Za-z0-9][A-Za-z0-9._-]{2,180}$"
+    },
+    "gate_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "assurance_class": {
+      "enum": [
+        "LOCAL_ADVISORY",
+        "MANAGED_AUTHORITATIVE"
+      ],
+      "description": "Assurance class of THIS execution; two classes never share a key and never merge results."
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "finished_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "result": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "ERROR",
+        "SKIPPED",
+        "UNAVAILABLE"
+      ],
+      "description": "Per-execution observation only - never a global GateOutcome."
+    },
+    "skip_reason": {
+      "$ref": "gate-skip-reason.schema.json",
+      "description": "Required when result is SKIPPED."
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "gate-evidence-reference.schema.json"
+      },
+      "description": "Content-bound evidence; at least one required for PASS."
+    },
+    "producer": {
+      "type": "string",
+      "minLength": 1
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "Canonical receipt content binding (see description)."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "result": {
+            "const": "PASS"
+          }
+        },
+        "required": [
+          "result"
+        ]
+      },
+      "then": {
+        "required": [
+          "evidence_refs"
+        ],
+        "properties": {
+          "evidence_refs": {
+            "type": "array",
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "result": {
+            "const": "SKIPPED"
+          }
+        },
+        "required": [
+          "result"
+        ]
+      },
+      "then": {
+        "required": [
+          "skip_reason"
+        ]
+      }
+    }
+  ]
+}

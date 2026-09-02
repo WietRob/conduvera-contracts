@@ -1,0 +1,304 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/WietRob/conduvera-contracts/main/schemas/gate-descriptor.schema.json",
+  "title": "Conduvera GateDescriptor (release D8_GATE_PROTOCOL)",
+  "description": "Public, non-authoritative descriptor of one Conduvera gate. A descriptor DECLARES planning and evidence semantics only; it never decides, executes, or carries any gate outcome (authority stays in conduvera-core). Identity rule: (gate_id, version [semantic_version], authority_domain) is the unique gate-definition identity - the protocol rejects two independent gate definitions claiming the same triple (enforced by the protocol test kit as the identity-collision rule).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "gate_id",
+    "version",
+    "semantic_digest",
+    "category",
+    "gate_family",
+    "authority_domain",
+    "cost_class",
+    "depends_on",
+    "applies_when",
+    "required_assurance_class",
+    "cache_policy",
+    "timeout",
+    "resource_class",
+    "side_effects",
+    "output_schema",
+    "canonical_source_refs",
+    "architecture_contract_refs",
+    "supersedes",
+    "non_regression_basis",
+    "semantic_review_trigger",
+    "input_subjects",
+    "required_when_relevant",
+    "excludable"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "gate-descriptor.v1"
+    },
+    "gate_id": {
+      "type": "string",
+      "pattern": "^gate_[A-Za-z0-9][A-Za-z0-9._-]{2,180}$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Semantic version of THIS gate definition (semantic_version in the identity triple)."
+    },
+    "semantic_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "sha256 over the canonical semantic content of this gate definition; changes whenever planning-relevant semantics change."
+    },
+    "category": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "description": "Free-form semantic category label (e.g. static-analysis, architecture-debt)."
+    },
+    "gate_family": {
+      "enum": [
+        "AUTHORITY_INTEGRITY",
+        "CHANGE_GOVERNANCE",
+        "SSOT_CANONICALITY",
+        "DOCUMENT_AUTHORITY",
+        "ARCHITECTURE_BOUNDARY",
+        "ARCHITECTURE_DEBT",
+        "CONTRACT_COMPATIBILITY",
+        "SECURITY",
+        "QUALITY",
+        "TEST",
+        "BUILD_MIGRATION",
+        "EXTERNAL_ANALYSIS",
+        "REVIEW_PREREQUISITE"
+      ],
+      "description": "V2.1 first-class gate family; architecture and SSoT capabilities are named families, never absorbed into generic lint/tests."
+    },
+    "authority_domain": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9._-]{1,120}$",
+      "description": "Authority domain the gate belongs to; part of the unique identity triple."
+    },
+    "cost_class": {
+      "enum": [
+        "INSTANT",
+        "LIGHT",
+        "MEDIUM",
+        "HEAVY",
+        "EXTERNAL"
+      ]
+    },
+    "depends_on": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^gate_[A-Za-z0-9][A-Za-z0-9._-]{2,180}$"
+      },
+      "uniqueItems": true
+    },
+    "applies_when": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Relevance declaration (changed paths, change classes, risk levels). Empty object means always relevant.",
+      "properties": {
+        "changed_paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "change_classes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "CODE",
+              "SCHEMA",
+              "CONTRACT",
+              "DOCS",
+              "CI",
+              "CONFIG",
+              "DEPENDENCIES",
+              "TESTS",
+              "MIGRATIONS",
+              "ANY"
+            ]
+          }
+        },
+        "risk_levels": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH"
+            ]
+          }
+        }
+      }
+    },
+    "required_assurance_class": {
+      "enum": [
+        "LOCAL_ADVISORY",
+        "MANAGED_AUTHORITATIVE"
+      ],
+      "description": "Assurance class this gate must run under; LOCAL_ADVISORY and MANAGED_AUTHORITATIVE results are never merged and never share an execution key."
+    },
+    "cache_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "REUSE_ON_KEY_MATCH",
+            "ALWAYS_RERUN"
+          ]
+        },
+        "max_age_seconds": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "timeout": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Maximum wall-clock seconds for one execution."
+    },
+    "resource_class": {
+      "enum": [
+        "CPU_LIGHT",
+        "CPU_HEAVY",
+        "MEMORY_HEAVY",
+        "IO_HEAVY",
+        "NETWORK_BOUND",
+        "GPU"
+      ]
+    },
+    "side_effects": {
+      "enum": [
+        "none",
+        "LOCAL_TEMP_WRITE",
+        "EXTERNAL_API_CALL",
+        "PERSISTENT_STATE_WRITE"
+      ],
+      "description": "Typed side-effect declaration; 'none' is the minimum and the default expectation for pure gates."
+    },
+    "output_schema": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Declared output/evidence schema identifier ($id or relative schema reference) the gate's evidence must validate against."
+    },
+    "canonical_source_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "description": "V2.1: canonical sources this gate's semantics were extracted from (exact files/commits); empty only for genuinely new gates."
+    },
+    "architecture_contract_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "description": "V2.1: architecture contracts / ADRs this gate enforces or is bound by."
+    },
+    "supersedes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "gate_id",
+          "semantic_digest"
+        ],
+        "properties": {
+          "gate_id": {
+            "type": "string",
+            "pattern": "^gate_[A-Za-z0-9][A-Za-z0-9._-]{2,180}$"
+          },
+          "semantic_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          }
+        }
+      }
+    },
+    "non_regression_basis": {
+      "enum": [
+        "EXACT_BASE_NON_REGRESSION",
+        "ABSOLUTE_LIMITS",
+        "DUAL_ABSOLUTE_AND_BASE",
+        "NOT_APPLICABLE"
+      ],
+      "description": "V2.1: how regression is judged - exact-base non-regression, absolute limits, dual policy, or not applicable."
+    },
+    "semantic_review_trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "triggers"
+      ],
+      "description": "V2.1: conditions under which this gate requires an independent semantic review (P5).",
+      "properties": {
+        "triggers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "PUBLIC_API_OR_SCHEMA_CHANGE",
+              "CONTRACT_SEMANTICS",
+              "STATE_MACHINE_OR_AUTHORITY",
+              "PERSISTENCE_OR_MIGRATION",
+              "BOUNDED_CONTEXT_OR_DEPENDENCY_DIRECTION",
+              "SECURITY_OR_PII_OR_TRUST_BOUNDARY",
+              "DEPLOYMENT_TOPOLOGY",
+              "CROSS_REPO_CONTRACT_BOUNDARY",
+              "CANONICAL_ARCHITECTURE_DOC_OR_ADR",
+              "MULTI_SUBSYSTEM_CHANGE",
+              "NONE"
+            ]
+          }
+        }
+      }
+    },
+    "input_subjects": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "CANDIDATE_TREE",
+          "BASE_TREE",
+          "CHANGED_PATHS",
+          "WORK_CONTRACT",
+          "POLICY",
+          "TOOLCHAIN",
+          "ENVIRONMENT",
+          "EVIDENCE_STORE",
+          "ADAPTER_DECLARATION"
+        ]
+      },
+      "description": "V2.1: subjects this gate evaluates; required gates evaluate ONLY candidate/diff-relevant inputs."
+    },
+    "required_when_relevant": {
+      "type": "boolean",
+      "description": "V2.1: when applies_when matches, the gate is required (true) or advisory (false); required gates may never be silently weakened or dropped."
+    },
+    "excludable": {
+      "type": "boolean",
+      "description": "V2.1: whether policy may exclude this gate at all; non-excludable gates (e.g. secret scan) are false."
+    }
+  }
+}

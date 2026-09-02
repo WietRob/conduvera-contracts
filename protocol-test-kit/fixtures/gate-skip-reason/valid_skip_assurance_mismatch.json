@@ -1,0 +1,6 @@
+{
+  "schema_version": "gate-skip-reason.v1",
+  "gate_id": "gate_lint",
+  "code": "ASSURANCE_CLASS_MISMATCH",
+  "detail": "available local advisory result cannot satisfy managed authoritative requirement"
+}

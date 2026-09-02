@@ -1,0 +1,34 @@
+{
+  "schema_version": "gate-descriptor.v1",
+  "gate_id": "gate_lint",
+  "version": "1.0.0",
+  "semantic_digest": "sha256:e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4",
+  "category": "lint",
+  "gate_family": "QUALITY",
+  "authority_domain": "repository-policy",
+  "cost_class": "CHEAP",
+  "depends_on": [],
+  "applies_when": {},
+  "required_assurance_class": "LOCAL_ADVISORY",
+  "cache_policy": {
+    "mode": "ALWAYS_RERUN"
+  },
+  "timeout": 60,
+  "resource_class": "CPU_LIGHT",
+  "side_effects": "none",
+  "output_schema": "x.json",
+  "canonical_source_refs": [],
+  "architecture_contract_refs": [],
+  "supersedes": [],
+  "non_regression_basis": "NOT_APPLICABLE",
+  "semantic_review_trigger": {
+    "triggers": [
+      "NONE"
+    ]
+  },
+  "input_subjects": [
+    "CANDIDATE_TREE"
+  ],
+  "required_when_relevant": true,
+  "excludable": true
+}

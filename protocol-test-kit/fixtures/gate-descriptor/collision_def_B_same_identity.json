@@ -1,0 +1,35 @@
+{
+  "schema_version": "gate-descriptor.v1",
+  "gate_id": "gate_secret_scan",
+  "version": "1.0.0",
+  "semantic_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "category": "security-scan",
+  "gate_family": "SECURITY",
+  "authority_domain": "repository-policy",
+  "cost_class": "MEDIUM",
+  "depends_on": [],
+  "applies_when": {},
+  "required_assurance_class": "MANAGED_AUTHORITATIVE",
+  "cache_policy": {
+    "mode": "ALWAYS_RERUN"
+  },
+  "timeout": 120,
+  "resource_class": "IO_HEAVY",
+  "side_effects": "none",
+  "output_schema": "gate-evidence-reference.schema.json",
+  "canonical_source_refs": [],
+  "architecture_contract_refs": [],
+  "supersedes": [],
+  "non_regression_basis": "NOT_APPLICABLE",
+  "semantic_review_trigger": {
+    "triggers": [
+      "NONE"
+    ]
+  },
+  "input_subjects": [
+    "CANDIDATE_TREE",
+    "CHANGED_PATHS"
+  ],
+  "required_when_relevant": true,
+  "excludable": false
+}

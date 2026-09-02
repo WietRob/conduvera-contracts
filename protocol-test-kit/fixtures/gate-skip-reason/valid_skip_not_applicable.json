@@ -1,0 +1,7 @@
+{
+  "schema_version": "gate-skip-reason.v1",
+  "gate_id": "gate_docs_build",
+  "code": "NOT_APPLICABLE_CHANGED_PATHS",
+  "detail": "candidate touches only *.py; docs build gate is path-irrelevant",
+  "execution_key": "c20e08b9910df79c63e7726e725df21ea90ccd2f6c98a63ef684761074d337a4"
+}

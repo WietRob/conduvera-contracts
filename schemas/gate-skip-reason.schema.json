@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/WietRob/conduvera-contracts/main/schemas/gate-skip-reason.schema.json",
+  "title": "Conduvera GateSkipReason (release D8_GATE_PROTOCOL)",
+  "description": "Typed reason for NOT executing a planned gate. Skipping is never silent: a skip always carries a typed code plus a mandatory human-readable detail. Unknown codes fail closed at validation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "gate_id",
+    "code",
+    "detail"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "gate-skip-reason.v1"
+    },
+    "gate_id": {
+      "type": "string",
+      "pattern": "^gate_[A-Za-z0-9][A-Za-z0-9._-]{2,180}$"
+    },
+    "code": {
+      "enum": [
+        "NOT_APPLICABLE_CHANGED_PATHS",
+        "ASSURANCE_CLASS_MISMATCH",
+        "CACHE_HIT",
+        "POLICY_DISABLED",
+        "DEPENDENCY_FAILED",
+        "P0_P1_BLOCK",
+        "NON_QUALIFYING_CHANGE",
+        "ENVIRONMENT_UNAVAILABLE",
+        "EXCLUDED_BY_POLICY"
+      ],
+      "description": "NOT_APPLICABLE_CHANGED_PATHS: candidate diff irrelevant; ASSURANCE_CLASS_MISMATCH: available result is from a different assurance class; CACHE_HIT: reusable execution with identical key; POLICY_DISABLED: policy disabled this gate; DEPENDENCY_FAILED: a depends_on gate failed; P0_P1_BLOCK: cheap early phase failed so expensive phases are not started; NON_QUALIFYING_CHANGE: change does not qualify (e.g. docs-only skips semantic review); ENVIRONMENT_UNAVAILABLE: required environment/toolchain unavailable; EXCLUDED_BY_POLICY: explicitly excluded by policy (excludable gates only)."
+    },
+    "detail": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Mandatory explanation; empty detail would be a silent skip and is forbidden."
+    },
+    "execution_key": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "Optional binding to the skipped/cached execution key."
+    }
+  }
+}

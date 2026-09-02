@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/WietRob/conduvera-contracts/main/schemas/gate-execution-key.schema.json",
+  "title": "Conduvera GateExecutionKey (release D8_GATE_PROTOCOL)",
+  "description": "Canonical, deterministic execution key for one gate execution. FROZEN DERIVATION: execution_key = lowercase-hex SHA-256 over the UTF-8 encoding of the compact JSON array [candidate_tree_sha, work_contract_digest, policy_digest, gate_semantic_digest, toolchain_digest, environment_digest, assurance_class], where each element is the component value EXACTLY as carried in `components`, JSON-string-encoded per RFC 8259 with separators ',' and ':' and no insignificant whitespace. Because assurance_class is a key component, two different assurance classes can NEVER share the same key; the same holds for toolchain and environment. Different assurance/toolchain/environment are never silently merged.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "execution_key",
+    "components"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "gate-execution-key.v1"
+    },
+    "execution_key": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "Lowercase-hex SHA-256 per the frozen derivation above."
+    },
+    "components": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_tree_sha",
+        "work_contract_digest",
+        "policy_digest",
+        "gate_semantic_digest",
+        "toolchain_digest",
+        "environment_digest",
+        "assurance_class"
+      ],
+      "properties": {
+        "candidate_tree_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$|^[0-9a-f]{64}$"
+        },
+        "work_contract_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "policy_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "gate_semantic_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "toolchain_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "environment_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "assurance_class": {
+          "enum": [
+            "LOCAL_ADVISORY",
+            "MANAGED_AUTHORITATIVE"
+          ]
+        }
+      }
+    }
+  }
+}

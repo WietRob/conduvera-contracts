@@ -1,0 +1,12 @@
+{
+  "schema_version": "gate-evidence-reference.v1",
+  "evidence_id": "gev_abc12345",
+  "content_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "subject": {
+    "subject_type": "CANDIDATE_TREE",
+    "subject_ref": "1111111111111111111111111111111111111111"
+  },
+  "store_location": "conduvera-evidence://gate-runs/1111111111111111111111111111111111111111/abc12345",
+  "produced_at": "2026-09-02T18:00:00Z",
+  "producer": "conduvera-core-gate-executor"
+}
