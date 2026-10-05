@@ -23,12 +23,14 @@ This repository has no authority over:
 
 Operational control-plane code does not belong here.
 
-## Bootstrap state
+## Release state
 
-The repository is intentionally initialized without published schemas or a
-contract release. [`schema-index.yaml`](schema-index.yaml) is the canonical
-machine-readable declaration of this empty bootstrap state. Later contract
-releases must version and hash every published artifact.
+[`schema-index.yaml`](schema-index.yaml) is the canonical machine-readable
+index of published contract releases (currently `status: active-releases`,
+including `C0`, `D0`, and `D8_GATE_PROTOCOL`, all dated 2026-09-02). Every
+published release is versioned and hashed; consumers bind a contract by an
+exact repository commit and artifact digest, never by a moving branch. Later
+releases must continue to version and hash every published artifact.
 
 ## Content areas
 
