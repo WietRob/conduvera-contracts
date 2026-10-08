@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/WietRob/conduvera-contracts/main/schemas/gate-evidence-reference.v2.schema.json",
+  "title": "Conduvera GateEvidenceReference v2 (mode-typed EXECUTED|REUSED, card K01)",
+  "description": "Mode-typed evidence reference: extends the frozen v1 reference by an explicit mode that separates the SOURCE-RECEIPT binding (the EXECUTED fact) from the CONSUMER side. The two concerns are validated as two separately addressable subschemas: source_binding points at exactly one immutable evidence object in the protected store; consumer_context binds the reference to the consuming candidate. Modes never merge: an EXECUTED-mode reference must point at a gate-execution-receipt v1 object, a REUSED-mode reference must point at a gate-evidence-reuse.v1 document; the wrong pairing is rejected. The frozen v1 reference stays untouched beside this additive v2.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evidence_id",
+    "mode",
+    "source_binding",
+    "consumer_context"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "gate-evidence-reference.v2"
+    },
+    "evidence_id": {
+      "type": "string",
+      "pattern": "^gev2_[A-Za-z0-9]{8,64}$",
+      "description": "Fresh id space (gev2_): a v2 reference is never confused with a v1 reference id."
+    },
+    "mode": {
+      "enum": [
+        "EXECUTED",
+        "REUSED"
+      ],
+      "description": "EXECUTED: this reference points at a source receipt (fresh execution evidence). REUSED: this reference points at a reuse-evidence document. Never both on one reference."
+    },
+    "source_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "content_sha256",
+        "store_object_id",
+        "evidence_type",
+        "produced_at"
+      ],
+      "properties": {
+        "content_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "description": "Digest over the canonical content of the referenced evidence payload; proves identity only after the payload is resolved from the store and re-hashed."
+        },
+        "store_object_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Object id of the referenced evidence inside the protected store; never a caller-supplied ad-hoc path."
+        },
+        "evidence_type": {
+          "enum": [
+            "GATE_EXECUTION_RECEIPT_V1",
+            "GATE_EVIDENCE_REUSE_V1"
+          ],
+          "description": "GATE_EXECUTION_RECEIPT_V1 is only admissible with mode EXECUTED; GATE_EVIDENCE_REUSE_V1 only with mode REUSED (enforced by the paired if/then rules below)."
+        },
+        "produced_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "consumer_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "consumer_tree_sha",
+        "consumer_plan_id"
+      ],
+      "properties": {
+        "consumer_tree_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$|^[0-9a-f]{64}$",
+          "description": "Tree of the consuming candidate the reference is admitted for."
+        },
+        "consumer_plan_id": {
+          "type": "string",
+          "pattern": "^gplan_[A-Za-z0-9]{8,64}$"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "EXECUTED"
+          }
+        },
+        "required": [
+          "mode"
+        ]
+      },
+      "then": {
+        "properties": {
+          "source_binding": {
+            "properties": {
+              "evidence_type": {
+                "const": "GATE_EXECUTION_RECEIPT_V1"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "REUSED"
+          }
+        },
+        "required": [
+          "mode"
+        ]
+      },
+      "then": {
+        "properties": {
+          "source_binding": {
+            "properties": {
+              "evidence_type": {
+                "const": "GATE_EVIDENCE_REUSE_V1"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

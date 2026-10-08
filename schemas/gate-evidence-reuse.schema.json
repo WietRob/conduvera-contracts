@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/WietRob/conduvera-contracts/main/schemas/gate-evidence-reuse.schema.json",
+  "title": "Conduvera GateEvidenceReuse (additive reuse evidence, card K01)",
+  "description": "Additive reuse-evidence document per the D05 reuse contract (REUSE_CONTRACT.md): admits ONE prior gate execution's evidence for the CURRENT candidate without a new execution. Strictly additive - it never replaces, rewrites, or re-tags the frozen GateExecutionReceipt v1 (the source receipt stays EXECUTED forever). The source execution key is adopted unchanged (never recalculated, never overwritten with target values). The source receipt digest is read from the protected store and RE-HASHED at the boundary; a caller-supplied digest is forbidden. All identity fields in complete_relevant_input_identity are mandatory - a missing identity is a MISS, never a partial hit. status is REUSED only: an EXECUTED claim belongs to the v1 receipt document, never to this one.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "source_execution_key",
+    "source_receipt_ref",
+    "complete_relevant_input_identity",
+    "current_candidate_binding",
+    "admission_decision",
+    "status"
+  ],
+  "properties": {
+    "schema": {
+      "const": "conduvera.gate-evidence-reuse.v1"
+    },
+    "source_execution_key": {
+      "$ref": "gate-execution-key.schema.json",
+      "description": "Frozen v1 GateExecutionKey of the source execution, taken over byte-for-byte and never recalculated."
+    },
+    "source_receipt_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "store_object_id",
+        "digest_sha256",
+        "rehashed"
+      ],
+      "properties": {
+        "store_object_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Object id inside the protected evidence store; never a caller-supplied ad-hoc path."
+        },
+        "digest_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "description": "Digest re-hashed at the boundary from the protected store object bytes; a stored digest copied without re-hashing is inadmissible."
+        },
+        "rehashed": {
+          "const": true,
+          "description": "Must be true: the boundary re-hashed the protected store object. false is never admissible."
+        }
+      }
+    },
+    "complete_relevant_input_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gate_id",
+        "tools",
+        "config",
+        "locks",
+        "environment",
+        "dependencies",
+        "assurance_class",
+        "binding_mode",
+        "inputs"
+      ],
+      "properties": {
+        "gate_id": {
+          "type": "string",
+          "pattern": "^gate_[A-Za-z0-9][A-Za-z0-9._-]{2,180}$"
+        },
+        "tools": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "description": "Tool identity digest; mandatory - a missing tool identity is a MISS."
+        },
+        "config": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "description": "Configuration identity digest; mandatory."
+        },
+        "locks": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "description": "Lockfile identity digest; mandatory."
+        },
+        "environment": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "description": "Environment identity digest; mandatory."
+        },
+        "dependencies": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "description": "Dependency identity digest; mandatory."
+        },
+        "assurance_class": {
+          "enum": [
+            "LOCAL_ADVISORY",
+            "MANAGED_AUTHORITATIVE"
+          ]
+        },
+        "binding_mode": {
+          "enum": [
+            "INPUT_BOUND",
+            "EXACT_BOUND"
+          ],
+          "description": "INPUT_BOUND requires a fully closed, completely identity-bound input set; HEAD and repository-wide gates are always EXACT_BOUND."
+        },
+        "inputs": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1
+          },
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "description": "Closed set of relevant inputs as path -> content digest. Must be non-empty: INPUT_BOUND never holds over an open or merely exemplary input set."
+        }
+      }
+    },
+    "current_candidate_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tree_sha",
+        "plan_id"
+      ],
+      "properties": {
+        "tree_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$|^[0-9a-f]{64}$",
+          "description": "The CURRENT candidate tree this reuse is bound to - not the historical source tree."
+        },
+        "plan_id": {
+          "type": "string",
+          "pattern": "^gplan_[A-Za-z0-9]{8,64}$"
+        }
+      },
+      "description": "Binds the reuse to the current candidate. Source key and target binding stay distinguishable and never merge."
+    },
+    "admission_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "admitted_by",
+        "admitted_at",
+        "decision_digest"
+      ],
+      "properties": {
+        "admitted_by": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Authenticated identity that admitted the reuse; an anonymous or unauthenticated decision admits nothing."
+        },
+        "admitted_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "decision_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "status": {
+      "enum": [
+        "REUSED"
+      ],
+      "description": "REUSED only. EXECUTED is the state of the v1 GateExecutionReceipt document, never of this reuse document."
+    }
+  }
+}
