@@ -1,0 +1,32 @@
+{
+  "schema": "conduvera.contract-release.v1",
+  "release": "EVIDENCE_REUSE_ADDENDUM",
+  "title": "Additive gate-evidence reuse contract (non-authoritative protocol schemas)",
+  "program_id": "CONDUVERA_ARCHITECTURE_PRESERVING_DONOR_TRANSFER_2026_10_05",
+  "released_at": "2026-10-08",
+  "depends_on": "D8_GATE_PROTOCOL",
+  "producer": {
+    "work": "K01 (D05 contract docs/program/transfer/REUSE_CONTRACT.md in conduvera-core)",
+    "review": "independent release review APPROVE_MERGE on head 89b339c56a554cd079a7e27ea799c20fa62db896 (zero P0/P1/P2; six D8-v1 schemas byte-identical incl. git blob-OID proof; 12 test vectors passed plus 30 adversarial probes all rejected)",
+    "merge": "PR #9 merge commit 86aa29af8962c26b133341a9567556b33bac87c0, conduvera/merge-ready check run 113303809271, decision mutdec_1a11b6c802f"
+  },
+  "acceptance": {
+    "additivity": "This release ADDS two schemas beside the frozen D8_GATE_PROTOCOL set; it changes no D8 v1 bytes, keys, or semantics. GateExecutionKey v1 identity is untouched; reuse is a separate evidence kind, never a re-labelled executed receipt.",
+    "reuse_doc": "gate-evidence-reuse.v1 binds source_execution_key (v1 reference), source_receipt_ref (store_object_id + digest_sha256 + rehashed=true from protected storage), complete_relevant_input_identity (gate, tools, config, locks, environment, dependencies, assurance_class, binding_mode, inputs), current_candidate_binding (tree_sha + plan_id) and an authenticated admission_decision; status is exactly REUSED (never EXECUTED — EXECUTED remains the v1 receipt's own status).",
+    "reference_v2": "gate-evidence-reference.v2 extends the v1 reference with mode EXECUTED|REUSED and validates source-receipt reference and consumer context as SEPARATE sub-schemas; cross-mode pairings are invalid by test vectors.",
+    "immutability_note": "Terminal result reference sets of executed receipts are immutable at the core service level (RESULT_REFS_IMMUTABLE, conduvera-core b7103068) — reuse admission never mutates the source."
+  },
+  "artifact_digests": {
+    "schemas/gate-evidence-reuse.schema.json": "064a91e77f70a7623eac4a2ce057d7a93325e2fa69313e176868b42954faf98f",
+    "schemas/gate-evidence-reference.v2.schema.json": "645700a63ff268b961b79a4553b63842f4a382787c74b4afcb4a51f3d5ab1b7f"
+  },
+  "protocol_tests": {
+    "validator": "tests/test_gate_evidence_reuse.py",
+    "fixtures": "inline vectors (12 positive/negative; validation mode reported by the suite)",
+    "rule": "all negatives fail closed for their declared reason; cross-mode pairings rejected"
+  },
+  "cross_repo_handoff": {
+    "consumer": "WietRob/conduvera-core (I05: input-bound reuse integration)",
+    "binding_rule": "consumers bind this release by exact repository commit and artifact digest, never by a moving branch; the core contract pin moves only in the same change that consumes it"
+  }
+}

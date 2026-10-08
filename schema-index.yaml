@@ -39,6 +39,13 @@ releases:
       - schemas/gate-execution-receipt.schema.json (gate-execution-receipt.v1)
       - schemas/gate-evidence-reference.schema.json (gate-evidence-reference.v1)
       - schemas/gate-skip-reason.schema.json (gate-skip-reason.v1)
+  - id: EVIDENCE_REUSE_ADDENDUM
+    file: releases/contract-release-EVIDENCE_REUSE_ADDENDUM.json
+    released_at: "2026-10-08"
+    depends_on: D8_GATE_PROTOCOL
+    schemas:
+      - schemas/gate-evidence-reuse.schema.json (gate-evidence-reuse.v1)
+      - schemas/gate-evidence-reference.v2.schema.json (gate-evidence-reference.v2)
 schemas:
   - id: work-contract.v2
     file: schemas/work-contract.schema.json
@@ -80,3 +87,11 @@ schemas:
     file: schemas/gate-skip-reason.schema.json
     release: D8_GATE_PROTOCOL
     description: typed skip codes with mandatory detail; skipping is never silent
+  - id: gate-evidence-reuse.v1
+    file: schemas/gate-evidence-reuse.schema.json
+    release: EVIDENCE_REUSE_ADDENDUM
+    description: additive reuse evidence document; status is exactly REUSED, source receipt is rehashed from protected storage, admission is authenticated
+  - id: gate-evidence-reference.v2
+    file: schemas/gate-evidence-reference.v2.schema.json
+    release: EVIDENCE_REUSE_ADDENDUM
+    description: evidence reference with mode EXECUTED|REUSED; source-receipt and consumer-context validation are separate sub-schemas
